@@ -1,0 +1,211 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f3f7ff;
+  color: #102a43;
+}
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  min-height: 100%;
+}
+body {
+  background: linear-gradient(180deg, #f9fbff 0%, #e8efff 100%);
+}
+button, input {
+  font: inherit;
+}
+.page-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(16, 42, 67, 0.08);
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 0 24px 60px rgba(20, 62, 122, 0.08);
+}
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #3366ff;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.8vw, 3rem);
+  line-height: 1.05;
+}
+.intro {
+  margin: 1rem 0 0;
+  max-width: 42rem;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.upload-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #1d4ed8 0%, #2563eb 100%);
+  border-radius: 999px;
+  color: white;
+  padding: 1rem 1.4rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.upload-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+}
+.upload-card input {
+  display: none;
+}
+.search-panel {
+  margin: 2rem 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.search-box {
+  flex: 1 1 320px;
+}
+.search-box label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #334155;
+  font-weight: 600;
+}
+.search-field {
+  display: flex;
+  width: 100%;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.search-field input {
+  border: none;
+  padding: 1rem 1rem;
+  width: 100%;
+  outline: none;
+  font-size: 1rem;
+}
+.search-field button {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  width: 3rem;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+.status-panel p {
+  margin: 0;
+  color: #334155;
+  font-weight: 600;
+}
+.job-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.job-card {
+  background: white;
+  border: 1px solid rgba(16, 42, 67, 0.08);
+  border-radius: 24px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.job-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(16, 42, 67, 0.08);
+}
+.job-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.job-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.job-company {
+  margin: 0.5rem 0 0;
+  color: #475569;
+  font-size: 0.95rem;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(56, 189, 248, 0.14);
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.match-score {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.match-score span {
+  color: #334155;
+  font-weight: 600;
+}
+.score-pill {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 999px;
+  padding: 0.6rem 0.95rem;
+  font-weight: 700;
+}
+.job-description {
+  margin: 1rem 0 0;
+  color: #475569;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+@media (max-width: 960px) {
+  .job-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .page-shell {
+    padding: 1.5rem 0 3rem;
+  }
+  .topbar {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  .search-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-field button {
+    width: 2.5rem;
+  }
+  .job-grid {
+    grid-template-columns: 1fr;
+  }
+}

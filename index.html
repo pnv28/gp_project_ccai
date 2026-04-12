@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HK Job Board | International Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f4f8;
+            color: #1a2a3a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        .upload-area {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .upload-label {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .upload-label:hover {
+            background: #1e3c72;
+        }
+
+        #cvFile {
+            display: none;
+        }
+
+        #fileName {
+            margin-left: 15px;
+            color: #666;
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e4e8;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        #searchInput:focus {
+            border-color: #2a5298;
+        }
+
+        .stats {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a2a3a;
+        }
+
+        .badge {
+            font-size: 1.2rem;
+        }
+
+        .company {
+            color: #2a5298;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .languages {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .match-score {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #2a5298;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .apply-btn {
+            display: inline-block;
+            margin-top: 12px;
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .apply-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇭🇰 HK International Student Job Board</h1>
+            <p>Find English-friendly jobs in Hong Kong as a non-Chinese speaker</p>
+        </header>
+
+        <div class="upload-area">
+            <label class="upload-label">
+                📄 Upload Your CV (TXT file)
+                <input type="file" id="cvFile" accept=".txt,.pdf">
+            </label>
+            <span id="fileName">No file chosen</span>
+            <p style="font-size: 12px; margin-top: 10px; color: #666;">Upload your CV to see match scores for each job</p>
+        </div>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="🔍 Search jobs by title, company, or skills...">
+        </div>
+
+        <div class="stats">
+            <span id="jobCount">Loading jobs...</span>
+        </div>
+
+        <div id="jobsContainer" class="jobs-grid"></div>
+    </div>
+
+    <script src="jobs.js"></script>
+    <script>
+        // This is your script.js code - put it all here
+        let allJobs = [];
+        let currentCVText = "";
+
+        // Load jobs from jobs.js
+        function loadJobs() {
+            if (typeof jobs !== 'undefined') {
+                allJobs = jobs;
+                displayJobs(allJobs);
+            } else {
+                document.getElementById('jobsContainer').innerHTML = '<p style="text-align:center;">Error: Jobs data not loaded. Check jobs.js file.</p>';
+                document.getElementById('jobCount').innerText = 'Error loading jobs';
+            }
+        }
+
+        // Display jobs
+        function displayJobs(jobsToShow) {
+            const container = document.getElementById('jobsContainer');
+            const jobCountSpan = document.getElementById('jobCount');
+            
+            if (!jobsToShow || jobsToShow.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No jobs found. Try a different search.</p>';
+                jobCountSpan.innerText = '0 jobs found';
+                return;
+            }
+
+            jobCountSpan.innerText = `${jobsToShow.length} jobs found`;
+
+            container.innerHTML = jobsToShow.map(job => `
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-title">${escapeHtml(job.title)}</div>
+                        <div class="badge">${job.badge || ''}</div>
+                    </div>
+                    <div class="company">🏢 ${escapeHtml(job.company)}</div>
+                    <div class="description">${escapeHtml(job.description.substring(0, 150))}${job.description.length > 150 ? '...' : ''}</div>
+                    <div class="languages">🌐 Languages: ${job.languages}</div>
+                    ${job.matchScore ? `<div class="match-score">📊 Match: ${job.matchScore}%</div>` : '<div class="match-score">📊 Upload CV to see match</div>'}
+                    <a href="${job.url}" target="_blank" class="apply-btn">Apply Now →</a>
+                </div>
+            `).join('');
+        }
+
+        // Search filter
+        function filterJobs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) {
+                displayJobs(allJobs);
+                return;
+            }
+            
+            const filtered = allJobs.filter(job => 
+                job.title.toLowerCase().includes(searchTerm) ||
+                job.company.toLowerCase().includes(searchTerm) ||
+                job.description.toLowerCase().includes(searchTerm) ||
+                job.languages.toLowerCase().includes(searchTerm)
+            );
+            displayJobs(filtered);
+        }
+
+        // CV Upload and matching
+        function handleCVUpload(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentCVText = e.target.result.toLowerCase();
+                calculateMatches();
+            };
+            reader.readAsText(file);
+        }
+
+        function calculateMatches() {
+            if (!currentCVText) return;
+            
+            const updatedJobs = allJobs.map(job => {
+                let matchCount = 0;
+                let totalChecks = 0;
+                
+                // Check job title words
+                const titleWords = job.title.toLowerCase().split(' ');
+                titleWords.forEach(word => {
+                    if (word.length > 2 && currentCVText.includes(word)) matchCount++;
+                    totalChecks++;
+                });
+                
+                // Check skills in description
+                const skillWords = ['python', 'java', 'sql', 'excel', 'react', 'javascript', 'html', 'css', 
+                                    'aws', 'cloud', 'data', 'analysis', 'marketing', 'sales', 'management',
+                                    'finance', 'accounting', 'design', 'figma', 'photoshop', 'writing'];
+                
+                skillWords.forEach(skill => {
+                    if (job.description.toLowerCase().includes(skill) && currentCVText.includes(skill)) {
+                        matchCount++;
+                    }
+                    totalChecks++;
+                });
+                
+                let score = Math.round((matchCount / Math.max(totalChecks, 1)) * 100);
+                score = Math.min(100, Math.max(0, score));
+                
+                return { ...job, matchScore: score };
+            });
+            
+            allJobs = updatedJobs;
+            filterJobs(); // Refresh display
+        }
+
+        // Helper function to prevent XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Set up event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs();
+            
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', filterJobs);
+            }
+            
+            const fileInput = document.getElementById('cvFile');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        document.getElementById('fileName').innerText = file.name;
+                        handleCVUpload(file);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
