@@ -1,0 +1,18 @@
+{
+  "name": "gp-project-ccai",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "translate": "node translate.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "csv-parse": "^5.5.6",
+    "csv-stringify": "^6.5.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.0",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1"
+  }
+}

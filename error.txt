@@ -1,0 +1,48 @@
+file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/node_modules/csv-parse/lib/api/index.js:506
+            : new CsvError(
+              ^
+
+CsvError: Invalid Record Length: columns length is 8, got 9 on line 2
+    at Object.__onRecord (file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/node_modules/csv-parse/lib/api/index.js:506:15)
+    at Object.parse (file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/node_modules/csv-parse/lib/api/index.js:444:36)
+    at parse (file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/node_modules/csv-parse/lib/sync.js:18:23)
+    at countCsvRows (file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/translate.js:39:16)
+    at translate (file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/translate.js:155:24)
+    at file:///Users/pidge/Documents/Classes/CCAI9028/group/gp_project_ccai/translate.js:200:13 {
+  code: 'CSV_RECORD_INCONSISTENT_COLUMNS',
+  bytes: 310,
+  comment_lines: 0,
+  empty_lines: 0,
+  invalid_field_length: 0,
+  lines: 2,
+  records: 0,
+  columns: [
+    { name: 'job_id' },
+    { name: 'job_title_english' },
+    { name: 'company' },
+    { name: 'url' },
+    { name: 'translated_description_english' },
+    { name: 'languages_required_english' },
+    { name: 'badge' },
+    { name: 'date_translated' }
+  ],
+  error: undefined,
+  header: false,
+  index: 9,
+  raw: undefined,
+  column: null,
+  quoting: false,
+  record: [
+    '1',
+    'Marketing Manager',
+    'Tencent',
+    'https://careers.tencent.com/job/123',
+    'Job description: Responsible for marketing strategy. Requires fluent Cantonese and good English.',
+    'Cantonese',
+    ' English',
+    '',
+    '2026-04-12'
+  ]
+}
+
+Node.js v25.9.0
