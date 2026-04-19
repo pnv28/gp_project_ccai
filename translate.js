@@ -178,7 +178,7 @@ function writeEnglishCsv(rows) {
 // ----------------------------------------------------------------------
 // Main translate function
 // ----------------------------------------------------------------------
-export async function translate(token) {
+export async function translate(token, onProgress = null) {
   const cantoCount = countCsvRows(CANTO_CSV);
   const englishCount = countCsvRows(ENG_CSV);
 
@@ -187,6 +187,7 @@ export async function translate(token) {
 
   if (cantoCount === englishCount) {
     console.log("Row counts match. No translation needed.");
+    onProgress?.({ done: true, noChange: true, completed: englishCount, total: englishCount });
     return;
   }
 
@@ -195,6 +196,7 @@ export async function translate(token) {
   const cantoRows = readCantoCsv();
   if (!cantoRows.length) {
     console.log("No data in canto_jobs.csv. Nothing to translate.");
+    onProgress?.({ done: true, noChange: true, completed: 0, total: 0 });
     return;
   }
 
@@ -203,6 +205,9 @@ export async function translate(token) {
   const total = cantoRows.length;
   const BATCH_SIZE = 5;
   const totalBatches = Math.ceil(total / BATCH_SIZE);
+  let completed = 0;
+
+  onProgress?.({ completed: 0, total, message: `Starting — ${total} jobs to translate...` });
 
   for (let i = 0; i < total; i += BATCH_SIZE) {
     const batch = cantoRows.slice(i, i + BATCH_SIZE);
@@ -210,10 +215,15 @@ export async function translate(token) {
     const rowRange = `${i + 1}–${Math.min(i + BATCH_SIZE, total)}`;
     console.log(`\nBatch ${batchNum}/${totalBatches} — rows ${rowRange} of ${total} (${batch.length} jobs in parallel)...`);
 
+    onProgress?.({ completed, total, message: `Batch ${batchNum}/${totalBatches} — translating ${batch.length} jobs in parallel...` });
+
     const batchResults = await Promise.all(
-      batch.map((row, j) => {
+      batch.map(async (row, j) => {
         console.log(`  [batch ${batchNum}] job_id=${row["job_id"]} (row ${i + j + 1}/${total})`);
-        return translateRow(row, token, today);
+        const result = await translateRow(row, token, today);
+        completed++;
+        onProgress?.({ completed, total, message: `Translated: ${result.job_title_english} (${completed}/${total})` });
+        return result;
       })
     );
 
@@ -223,6 +233,7 @@ export async function translate(token) {
 
   writeEnglishCsv(englishRows);
   console.log(`\nTranslation complete. ${englishRows.length} jobs written to ${ENG_CSV}`);
+  onProgress?.({ done: true, completed: englishRows.length, total, message: `Done — ${englishRows.length} jobs translated.` });
 }
 
 // ----------------------------------------------------------------------
